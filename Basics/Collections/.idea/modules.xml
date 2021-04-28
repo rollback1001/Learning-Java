@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Collections.iml" filepath="$PROJECT_DIR$/Collections.iml" />
       <module fileurl="file://$PROJECT_DIR$/MinimumElementChallenge/MinimumElementChallenge.iml" filepath="$PROJECT_DIR$/MinimumElementChallenge/MinimumElementChallenge.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ReverseArrayChallenge/ReverseArrayChallenge.iml" filepath="$PROJECT_DIR$/ReverseArrayChallenge/ReverseArrayChallenge.iml" />
     </modules>
   </component>
 </project>
