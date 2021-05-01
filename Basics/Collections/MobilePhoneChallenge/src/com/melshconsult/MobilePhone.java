@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class MobilePhone {
 
-	private static Scanner scanner = new Scanner(System.in);
+	private static final Scanner scanner = new Scanner(System.in);
 
 	ArrayList<Contact> contacts;
 
@@ -24,35 +24,84 @@ public class MobilePhone {
 		contacts.add(newContact);
 	}
 
-	protected int searchContact(String name) {
+	protected boolean searchContact(String name) {
+		String cleanName = cleanInput(name);
+
 		for (Contact contact : contacts) {
-			if (contact.getName().equals(name)) {
-				return findContact(contact);
+			if (contact.getName().equals(cleanName)) {
+				return true;
 			}
 		}
-		return -1;
+		return false;
 	}
 
-	protected void modifyContact(String searchName) {
-		if (searchContact(searchName) >= 0) {
-			System.out.print("Enter replacement name: ");
-			String newName = scanner.next().trim().toLowerCase();
+	protected boolean removeContact(String name) {
+		int contactPosition;
+		String contactName = cleanInput(name);
+		boolean foundContact = searchContact(contactName);
 
-			System.out.print("Enter replacement number: ");
-			int newNumber = scanner.nextInt();
-
-			int currentContactPosition = searchContact(searchName);
-			Contact replacementContact = new Contact(newName, newNumber);
-
-			modifyContact(currentContactPosition, replacementContact);
+		if (!foundContact) {
+			return false;
+		}
+		else {
+			contactPosition = findContact(contactName);
+			return contacts.remove(findContact(contactPosition));
 		}
 	}
 
-	private void modifyContact(int currentContactPosition, Contact replacementContact) {
+	protected boolean modifyContact(String searchName, String newName, int newNumber) {
+		String currentName = cleanInput(searchName);
+		String replaceName = cleanInput(newName);
+		int replaceNumber, currentContactPosition;
+
+		if (!searchContact(currentName)) {
+			return false;
+		}
+		else {
+			currentContactPosition = findContact(currentName);
+			Contact currentContact = findContact(currentContactPosition);
+
+			replaceNumber = verifyNumberNotZeroOrNegative(currentContact, newNumber);
+
+			Contact replacementContact = new Contact(replaceName, replaceNumber);
+			contacts.set(currentContactPosition, replacementContact);
+
+			return true;
+		}
+	}
+
+	private int verifyNumberNotZeroOrNegative(Contact contact, int number) {
+		if (number > 0) {
+			contact.setNumber(number);
+		}
+		return contact.getNumber();
+	}
+
+	private void modifyContact(int currentContactPosition, String searchName) {
+		System.out.print("Enter replacement name: ");
+		String newName = cleanInput(scanner.next());
+
+		System.out.print("Enter replacement number: ");
+		int newNumber = scanner.nextInt();
+
+		Contact replacementContact = new Contact(newName, newNumber);
 		contacts.set(currentContactPosition, replacementContact);
 	}
 
-	private int findContact(Contact searchContact) {
-		return contacts.indexOf(searchContact);
+	private String cleanInput(String name) {
+		return name.trim().toLowerCase();
+	}
+
+	private Contact findContact(int contactPosition) {
+		return contacts.get(contactPosition);
+	}
+
+	private int findContact(String contactName) {
+		for (Contact contact : contacts) {
+			if (contact.getName().equals(contactName)) {
+				return contacts.indexOf(contact);
+			}
+		}
+		return -1;
 	}
 }
